@@ -1,0 +1,1570 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Mundo Decimal: Herramientas Integradas</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+    
+    <style>
+        /* === ESTILOS GLOBALES Y DE NAVEGACIÓN === */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', 'Helvetica Neue', sans-serif;
+        }
+
+        :root {
+            --primary: #6a11cb;
+            --secondary: #2575fc;
+            --accent: #ff6b6b;
+            --light: #f8f9ff;
+            --dark: #2d2d44;
+            --gray: #e0e0ff;
+            --green: #7cbe29;
+            --blue: #75AADB;
+        }
+
+        body {
+            background-color: #f0f2f5;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .main-header {
+            background: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%);
+            color: white;
+            padding: 20px 30px;
+            text-align: center;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+            z-index: 100;
+        }
+
+        .main-header h1 {
+            font-size: 28px;
+            font-weight: 700;
+        }
+
+        .main-nav {
+            background: white;
+            display: flex;
+            justify-content: center;
+            padding: 10px;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.05);
+            z-index: 50;
+            position: sticky;
+            top: 0;
+            flex-wrap: wrap;
+        }
+
+        .nav-btn {
+            padding: 12px 20px;
+            font-size: 16px;
+            font-weight: 600;
+            color: var(--dark);
+            background: transparent;
+            border: none;
+            cursor: pointer;
+            border-bottom: 3px solid transparent;
+            transition: all 0.3s ease;
+            margin: 5px;
+        }
+
+        .nav-btn:hover {
+            color: var(--secondary);
+        }
+
+        .nav-btn.active {
+            color: var(--primary);
+            border-bottom-color: var(--primary);
+        }
+
+        main {
+            flex: 1;
+            padding: 20px;
+            overflow: auto;
+        }
+
+        .app-view {
+            display: none; /* Se ocultan todas por defecto */
+        }
+
+        .app-view.active {
+            display: block; /* Se muestra la activa */
+        }
+
+        /* === ESTILOS PARA APP 1: RECTA NUMÉRICA (RECTA NUMERICA.HTML) === */
+        /* Adaptado: el 'body' original es ahora el div #app-recta */
+        #app-recta {
+            display: flex;
+            justify-content: center;
+            align-items: flex-start; /* Ajustado para que no esté siempre centrado verticalmente */
+            padding: 20px 0;
+            min-height: 80vh;
+        }
+
+        #app-recta .card {
+            background: white;
+            border-radius: 24px;
+            box-shadow: 0 20px 50px rgba(0, 0, 0, 0.25);
+            width: 100%;
+            max-width: 900px;
+            overflow: hidden;
+            position: relative;
+        }
+
+        #app-recta .header {
+            background: linear-gradient(to right, var(--primary), var(--secondary));
+            color: white;
+            padding: 30px 25px;
+            text-align: center;
+        }
+
+        #app-recta .header h1 {
+            font-size: 28px;
+            font-weight: 700;
+            margin-bottom: 10px;
+        }
+
+        #app-recta .header p {
+            opacity: 0.9;
+            font-size: 16px;
+            max-width: 600px;
+            margin: 0 auto;
+            line-height: 1.5;
+        }
+
+        #app-recta .input-section {
+            padding: 30px;
+            text-align: center;
+            background: var(--light);
+        }
+
+        #app-recta .input-group {
+            display: flex;
+            justify-content: center;
+            gap: 12px;
+            flex-wrap: wrap;
+            margin-top: 15px;
+        }
+
+        #app-recta input[type="text"] {
+            padding: 14px 20px;
+            font-size: 18px;
+            border: 2px solid #ddd;
+            border-radius: 50px;
+            width: 220px;
+            text-align: center;
+            transition: all 0.3s ease;
+            outline: none;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.05);
+        }
+
+        #app-recta input[type="text"]:focus {
+            border-color: var(--secondary);
+            box-shadow: 0 4px 15px rgba(37, 117, 252, 0.3);
+        }
+
+        #app-recta button {
+            background: linear-gradient(to right, var(--primary), var(--secondary));
+            color: white;
+            border: none;
+            border-radius: 50px;
+            padding: 14px 32px;
+            font-size: 17px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 6px 15px rgba(37, 117, 252, 0.4);
+        }
+
+        #app-recta button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 20px rgba(37, 117, 252, 0.6);
+        }
+
+        #app-recta .error {
+            color: #e74c3c;
+            margin-top: 15px;
+            font-weight: 600;
+            min-height: 22px;
+            font-size: 15px;
+        }
+
+        #app-recta .number-line-container {
+            padding: 25px;
+            border-bottom: 1px solid #f0f0f0;
+        }
+
+        #app-recta .number-line-container:last-child {
+            border-bottom: none;
+        }
+
+        #app-recta .number-line-title {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-size: 20px;
+            font-weight: 700;
+            color: var(--primary);
+            margin-bottom: 20px;
+        }
+
+        #app-recta .number-line {
+            position: relative;
+            height: 90px;
+            margin-top: 15px;
+        }
+
+        #app-recta .line {
+            position: absolute;
+            top: 40px;
+            left: 5%;
+            right: 5%;
+            height: 4px;
+            background: linear-gradient(to right, #ccc, #999);
+            border-radius: 2px;
+        }
+
+        #app-recta .tick {
+            position: absolute;
+            top: 38px;
+            width: 2px;
+            height: 12px;
+            background: #555;
+        }
+
+        #app-recta .tick-label {
+            position: absolute;
+            top: 55px;
+            left: 50%;
+            transform: translateX(-50%);
+            font-size: 13px;
+            font-weight: 600;
+            color: #333;
+            white-space: nowrap;
+            width: max-content;
+        }
+
+        #app-recta .marker {
+            position: absolute;
+            top: 25px;
+            width: 4px;
+            height: 30px;
+            background: var(--accent);
+            border-radius: 2px;
+            transform: translateX(-50%);
+            box-shadow: 0 0 8px rgba(255, 107, 107, 0.7);
+        }
+
+        #app-recta .marker-label {
+            position: absolute;
+            top: -32px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: var(--accent);
+            color: white;
+            padding: 5px 10px;
+            border-radius: 15px;
+            font-weight: 700;
+            font-size: 15px;
+            white-space: nowrap;
+            box-shadow: 0 3px 8px rgba(255, 107, 107, 0.4);
+        }
+
+        #app-recta .hidden {
+            display: none;
+        }
+
+        #app-recta .example {
+            margin-top: 12px;
+            font-size: 14px;
+            color: #666;
+        }
+
+        @media (max-width: 650px) {
+            #app-recta .input-group {
+                flex-direction: column;
+                align-items: center;
+            }
+            #app-recta input[type="text"], #app-recta button {
+                width: 100%;
+                max-width: 300px;
+            }
+            #app-recta .tick-label {
+                font-size: 11px;
+            }
+        }
+
+
+        /* === ESTILOS PARA APP 2: CONCEPTOS (CUADROS.HTML) === */
+        /* Adaptado: el 'body' original es ahora el div #app-conceptos */
+        #app-conceptos {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: var(--blue);
+            min-height: 80vh;
+            padding: 30px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            border-radius: 20px;
+        }
+
+        #app-conceptos h1 {
+            color: white;
+            font-size: 36px;
+            text-align: center;
+            margin-bottom: 20px;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+        }
+
+        #app-conceptos .subtitle {
+            color: rgba(255,255,255,0.9);
+            font-size: 18px;
+            text-align: center;
+            margin-bottom: 40px;
+        }
+
+        #app-conceptos .container {
+            display: flex;
+            gap: 40px;
+            flex-wrap: wrap;
+            justify-content: center;
+            align-items: flex-start;
+            max-width: 1400px;
+        }
+
+        #app-conceptos .card {
+            background: white;
+            border-radius: 20px;
+            padding: 30px;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.2);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            cursor: pointer;
+            text-align: center;
+            min-width: 300px;
+        }
+
+        #app-conceptos .card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 15px 50px rgba(0,0,0,0.3);
+        }
+
+        #app-conceptos .card-title {
+            font-size: 24px;
+            color: #333;
+            margin-bottom: 20px;
+            font-weight: 600;
+        }
+
+        #app-conceptos .square-container {
+            width: 200px;
+            height: 200px;
+            margin: 0 auto 20px;
+            overflow: hidden;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+        }
+
+        #app-conceptos .square {
+            width: 100%;
+            height: 100%;
+            background: var(--green);
+            border: 3px solid #000;
+        }
+
+        #app-conceptos .grid {
+            display: grid;
+            width: 100%;
+            height: 100%;
+            background-color: var(--green);
+            border: 3px solid #000;
+        }
+
+        #app-conceptos .grid-10 { grid-template-columns: repeat(10, 1fr); }
+        #app-conceptos .grid-100 { grid-template-columns: repeat(10, 1fr); grid-template-rows: repeat(10, 1fr); }
+        #app-conceptos .grid-1000 { grid-template-columns: repeat(32, 1fr); grid-template-rows: repeat(32, 1fr); }
+        #app-conceptos .grid-cell { border: 0.5px solid #333; background: var(--green); }
+        #app-conceptos .grid-1000 .grid-cell { border: 0.2px solid #555; }
+
+        #app-conceptos .formula {
+            font-size: 16px;
+            color: #555;
+            margin: 10px 0;
+            line-height: 1.6;
+        }
+
+        #app-conceptos .fraction {
+            display: inline-block;
+            vertical-align: middle;
+            text-align: center;
+            margin: 0 3px;
+        }
+
+        #app-conceptos .fraction-top {
+            display: block;
+            border-bottom: 2px solid #333;
+            padding-bottom: 2px;
+        }
+
+        #app-conceptos .fraction-bottom {
+            display: block;
+            padding-top: 2px;
+        }
+
+        #app-conceptos .highlight {
+            color: #667eea;
+            font-weight: 700;
+        }
+
+        /* Modal de pantalla completa (App 2) */
+        #app-conceptos .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            background: rgba(0,0,0,0.95);
+            z-index: 1000;
+            animation: app-conceptos-fadeIn 0.3s ease;
+        }
+
+        #app-conceptos .modal.active {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        @keyframes app-conceptos-fadeIn { from { opacity: 0; } to { opacity: 1; } }
+
+        #app-conceptos .modal-content {
+            position: relative;
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            animation: app-conceptos-zoomIn 0.3s ease;
+        }
+
+        @keyframes app-conceptos-zoomIn { from { transform: scale(0.5); opacity: 0; } to { transform: scale(1); opacity: 1; } }
+
+        #app-conceptos .modal-title {
+            color: white;
+            font-size: 48px;
+            margin-bottom: 30px;
+            text-shadow: 2px 2px 8px rgba(0,0,0,0.5);
+        }
+
+        #app-conceptos .modal-square {
+            width: 70vmin;
+            height: 70vmin;
+            overflow: hidden;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.5);
+            margin-bottom: 30px;
+            flex-shrink: 0;
+        }
+
+        #app-conceptos .modal-info {
+            background: rgba(255,255,255,0.1);
+            backdrop-filter: blur(10px);
+            padding: 25px 40px;
+            border-radius: 15px;
+            color: white;
+            font-size: 22px;
+            text-align: center;
+            max-width: 800px;
+            line-height: 1.8;
+        }
+
+        #app-conceptos .close-btn {
+            position: absolute;
+            top: 30px;
+            right: 30px;
+            width: 60px;
+            height: 60px;
+            background: rgba(255,255,255,0.2);
+            border: 2px solid white;
+            border-radius: 50%;
+            color: white;
+            font-size: 30px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.3s ease;
+            backdrop-filter: blur(10px);
+        }
+
+        #app-conceptos .close-btn:hover {
+            background: rgba(255,255,255,0.3);
+            transform: rotate(90deg);
+        }
+
+        @media (max-width: 768px) {
+            #app-conceptos .container { gap: 20px; }
+            #app-conceptos .card { min-width: 250px; padding: 20px; }
+            #app-conceptos .square-container { width: 150px; height: 150px; }
+            #app-conceptos h1 { font-size: 28px; }
+            #app-conceptos .modal-title { font-size: 32px; }
+            #app-conceptos .modal-info { font-size: 18px; padding: 20px; }
+        }
+
+        
+        /* === ESTILOS PARA APP 3: REPRESENTACIÓN DINÁMICA (REPRESENTACION CUADROS.HTML) === */
+        /* Adaptado: el 'body' original es ahora el div #app-representacion */
+        #app-representacion {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: var(--blue);
+            min-height: 80vh;
+            padding: 30px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: flex-start;
+            border-radius: 20px;
+        }
+        
+        #app-representacion h1 {
+            color: white;
+            font-size: 36px;
+            text-align: center;
+            margin: 20px 0;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+        }
+
+        #app-representacion .input-section {
+            background: white;
+            padding: 20px 30px;
+            border-radius: 15px;
+            margin-bottom: 30px;
+            box-shadow: 0 6px 20px rgba(0,0,0,0.15);
+            width: 90%;
+            max-width: 600px;
+            text-align: center;
+        }
+
+        #app-representacion .input-section input {
+            padding: 12px;
+            font-size: 18px;
+            border: 2px solid #667eea;
+            border-radius: 8px;
+            width: 200px;
+            text-align: center;
+            margin: 5px 10px;
+        }
+
+        #app-representacion .input-section button {
+            padding: 12px 24px;
+            font-size: 18px;
+            background: #667eea;
+            color: white;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: background 0.3s;
+            margin: 5px;
+        }
+
+        #app-representacion .input-section button:hover { background: #5a6fd8; }
+        #app-representacion .input-section button.clear-btn { background: #e2e8f0; color: #4a5568; }
+        #app-representacion .input-section button.clear-btn:hover { background: #cbd5e0; }
+
+        #app-representacion .error {
+            color: #e74c3c;
+            margin-top: 10px;
+            font-size: 16px;
+        }
+        
+        #app-representacion .container {
+            display: flex;
+            gap: 30px;
+            flex-wrap: wrap;
+            justify-content: center;
+            align-items: flex-start;
+            max-width: 1400px;
+        }
+        
+        #app-representacion .card {
+            background: white;
+            border-radius: 20px;
+            padding: 25px;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.2);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            cursor: pointer;
+            text-align: center;
+            min-width: 220px;
+            max-width: 280px;
+        }
+        
+        #app-representacion .card:hover {
+            transform: translateY(-8px);
+            box-shadow: 0 15px 50px rgba(0,0,0,0.3);
+        }
+        
+        #app-representacion .card-title {
+            font-size: 20px;
+            color: #333;
+            margin-bottom: 15px;
+            font-weight: 600;
+        }
+        
+        #app-representacion .square-container {
+            width: 180px;
+            height: 180px;
+            margin: 0 auto 15px;
+            overflow: hidden;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            align-items: center;
+            gap: 10px;
+            padding: 10px;
+        }
+        
+        #app-representacion .square {
+            width: 100%;
+            height: 100%;
+            background: #ddd;
+            border: 3px solid #000;
+        }
+
+        #app-representacion .square.empty-unit { background: #fff; }
+
+        #app-representacion .unit-square {
+            background: var(--green);
+            border: 3px solid #000;
+            flex-shrink: 0;
+        }
+        
+        #app-representacion .filled { background: var(--green) !important; }
+        
+        #app-representacion .grid {
+            display: grid;
+            width: 100%;
+            height: 100%;
+            background-color: #eee;
+            border: 3px solid #000;
+        }
+        
+        #app-representacion .grid-10 { grid-template-columns: repeat(10, 1fr); }
+        #app-representacion .grid-100 { grid-template-columns: repeat(10, 1fr); grid-template-rows: repeat(10, 1fr); }
+        #app-representacion .grid-1000 { grid-template-columns: repeat(32, 1fr); grid-template-rows: repeat(32, 1fr); }
+        
+        #app-representacion .grid-cell { border: 0.5px solid #000; background: #eee; }
+        #app-representacion .grid-1000 .grid-cell { border: 0.2px solid #000; }
+        
+        #app-representacion .formula {
+            font-size: 14px;
+            color: #555;
+            margin: 10px 0;
+            line-height: 1.5;
+        }
+        
+        #app-representacion .fraction {
+            display: inline-block;
+            vertical-align: middle;
+            text-align: center;
+            margin: 0 3px;
+        }
+        
+        #app-representacion .fraction-top {
+            display: block;
+            border-bottom: 2px solid #333;
+            padding-bottom: 2px;
+        }
+        
+        #app-representacion .fraction-bottom { display: block; padding-top: 2px; }
+        #app-representacion .highlight { color: #667eea; font-weight: 700; }
+        #app-representacion .units-container {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 10px;
+            padding: 10px;
+        }
+        
+        /* Modal de pantalla completa (App 3) */
+        #app-representacion .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            background: rgba(0,0,0,0.95);
+            z-index: 1000;
+            animation: app-rep-fadeIn 0.3s ease;
+        }
+        
+        #app-representacion .modal.active {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        @keyframes app-rep-fadeIn { from { opacity: 0; } to { opacity: 1; } }
+        
+        #app-representacion .modal-content {
+            position: relative;
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            animation: app-rep-zoomIn 0.3s ease;
+        }
+        
+        @keyframes app-rep-zoomIn { from { transform: scale(0.5); opacity: 0; } to { transform: scale(1); opacity: 1; } }
+        
+        #app-representacion .modal-title {
+            color: white;
+            font-size: 40px;
+            margin-bottom: 25px;
+            text-shadow: 2px 2px 8px rgba(0,0,0,0.5);
+        }
+        
+        #app-representacion .modal-square {
+            width: 65vmin;
+            height: 65vmin;
+            overflow: hidden;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.5);
+            margin-bottom: 25px;
+            flex-shrink: 0;
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            align-items: center;
+            gap: 20px;
+            padding: 20px;
+        }
+        
+        #app-representacion .modal-unit {
+            width: 120px;
+            height: 120px;
+            background: var(--green);
+            border: 3px solid #000;
+        }
+        
+        #app-representacion .modal-info {
+            background: rgba(255,255,255,0.1);
+            backdrop-filter: blur(10px);
+            padding: 20px 30px;
+            border-radius: 15px;
+            color: white;
+            font-size: 20px;
+            text-align: center;
+            max-width: 750px;
+            line-height: 1.7;
+        }
+        
+        #app-representacion .close-btn {
+            position: absolute;
+            top: 25px;
+            right: 25px;
+            width: 50px;
+            height: 50px;
+            background: rgba(255,255,255,0.2);
+            border: 2px solid white;
+            border-radius: 50%;
+            color: white;
+            font-size: 24px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.3s ease;
+            backdrop-filter: blur(10px);
+        }
+        
+        #app-representacion .close-btn:hover {
+            background: rgba(255,255,255,0.3);
+            transform: rotate(90deg);
+        }
+        
+        @media (max-width: 768px) {
+            #app-representacion .container { gap: 15px; }
+            #app-representacion .card { min-width: 180px; padding: 18px; }
+            #app-representacion .square-container { width: 140px; height: 140px; }
+            #app-representacion .unit-square { width: 40px; height: 40px; }
+            #app-representacion .modal-unit { width: 80px; height: 80px; }
+            #app-representacion h1 { font-size: 26px; }
+            #app-representacion .modal-title { font-size: 28px; }
+            #app-representacion .modal-info { font-size: 16px; padding: 15px; }
+        }
+    </style>
+</head>
+<body>
+
+    <header class="main-header">
+        <h1>Mundo Decimal: Herramientas Integradas 🔢</h1>
+    </header>
+
+    <nav class="main-nav">
+        <button id="nav-btn-recta" class="nav-btn active" onclick="showApp('app-recta')">
+            <i class="fas fa-ruler-horizontal"></i> Recta Numérica
+        </button>
+        <button id="nav-btn-rep" class="nav-btn" onclick="showApp('app-representacion')">
+            <i class="fas fa-shapes"></i> Representación Dinámica
+        </button>
+        <button id="nav-btn-con" class="nav-btn" onclick="showApp('app-conceptos')">
+            <i class="fas fa-book-open"></i> Conceptos (Unidad, Décima...)
+        </button>
+    </nav>
+
+    <main>
+        <div id="app-recta" class="app-view active">
+            <div class="card">
+                <div class="header">
+                    <h1><i class="fas fa-ruler-horizontal"></i> Recta Numérica Decimal</h1>
+                    <p>Introduce un número y observa su ubicación en unidades, décimas, centésimas y milésimas</p>
+                </div>
+                <div class="input-section">
+                    <div class="input-group">
+                        <input type="text" id="recta-decimalInput" placeholder="Ej. 1,376 o -2.5" />
+                        <button id="recta-locateBtn">
+                            <i class="fas fa-map-marker-alt"></i> Ubicar
+                        </button>
+                    </div>
+                    <div class="example">💡 Ejemplos: <code>1.376</code>, <code>-0,5</code>, <code>3,141</code></div>
+                    <div id="recta-errorMessage" class="error"></div>
+                </div>
+                <div class="number-line-container" id="recta-section1">
+                    <div class="number-line-title">
+                        <i class="fas fa-arrows-alt-h"></i> Paso 1: Unidades
+                    </div>
+                    <div class="number-line" id="recta-lineUnits">
+                        <div class="line"></div>
+                    </div>
+                </div>
+                <div class="number-line-container hidden" id="recta-section2">
+                    <div class="number-line-title">
+                        <i class="fas fa-level-up-alt"></i> Paso 2: Décimas
+                    </div>
+                    <div class="number-line" id="recta-lineTenths">
+                        <div class="line"></div>
+                    </div>
+                </div>
+                <div class="number-line-container hidden" id="recta-section3">
+                    <div class="number-line-title">
+                        <i class="fas fa-search-plus"></i> Paso 3: Centésimas
+                    </div>
+                    <div class="number-line" id="recta-lineHundredths">
+                        <div class="line"></div>
+                    </div>
+                </div>
+                <div class="number-line-container hidden" id="recta-section4">
+                    <div class="number-line-title">
+                        <i class="fas fa-microscope"></i> Paso 4: Milésimas
+                    </div>
+                    <div class="number-line" id="recta-lineThousandths">
+                        <div class="line"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div id="app-conceptos" class="app-view">
+            <h1>REPRESENTACIÓN DE NÚMEROS DECIMALES</h1>
+            <p class="subtitle">Haz clic en cada cuadrado para verlo en grande</p>
+            <div class="container">
+                <div class="card" onclick="con_openModal('unidad')">
+                    <h2 class="card-title">1 UNIDAD</h2>
+                    <div class="square-container">
+                        <div class="square"></div>
+                    </div>
+                    <div class="formula">
+                        <span class="highlight">1 unidad</span> = un todo completo
+                    </div>
+                </div>
+                <div class="card" onclick="con_openModal('decimas')">
+                    <h2 class="card-title">DÉCIMAS</h2>
+                    <div class="square-container">
+                        <div class="grid grid-10" id="con-preview-decimas"></div>
+                    </div>
+                    <div class="formula">
+                        1 unidad = <span class="highlight">10 décimas</span><br>
+                        1 décima = <span class="fraction"><span class="fraction-top">1</span><span class="fraction-bottom">10</span></span> = 0,1
+                    </div>
+                </div>
+                <div class="card" onclick="con_openModal('centesimas')">
+                    <h2 class="card-title">CENTÉSIMAS</h2>
+                    <div class="square-container">
+                        <div class="grid grid-100" id="con-preview-centesimas"></div>
+                    </div>
+                    <div class="formula">
+                        1 unidad = <span class="highlight">100 centésimas</span><br>
+                        1 centésima = <span class="fraction"><span class="fraction-top">1</span><span class="fraction-bottom">100</span></span> = 0,01
+                    </div>
+                </div>
+                <div class="card" onclick="con_openModal('milesimas')">
+                    <h2 class="card-title">MILÉSIMAS</h2>
+                    <div class="square-container">
+                        <div class="grid grid-1000" id="con-preview-milesimas"></div>
+                    </div>
+                    <div class="formula">
+                        1 unidad = <span class="highlight">1.000 milésimas</span><br>
+                        1 milésima = <span class="fraction"><span class="fraction-top">1</span><span class="fraction-bottom">1.000</span></span> = 0,001
+                    </div>
+                </div>
+            </div>
+            
+            <div class="modal" id="con-modal-unidad">
+                <div class="close-btn" onclick="con_closeModal('unidad')">✕</div>
+                <div class="modal-content">
+                    <h2 class="modal-title">1 UNIDAD</h2>
+                    <div class="modal-square">
+                        <div class="square"></div>
+                    </div>
+                    <div class="modal-info">
+                        La <span class="highlight">unidad</span> representa un todo completo.
+                    </div>
+                </div>
+            </div>
+            <div class="modal" id="con-modal-decimas">
+                <div class="close-btn" onclick="con_closeModal('decimas')">✕</div>
+                <div class="modal-content">
+                    <h2 class="modal-title">DÉCIMAS</h2>
+                    <div class="modal-square">
+                        <div class="grid grid-10" id="con-modal-grid-decimas"></div>
+                    </div>
+                    <div class="modal-info">
+                        Cuando dividimos la unidad en <span class="highlight">10 partes iguales</span>,<br>
+                        cada parte es una <span class="highlight">décima</span> (1/10 = 0,1)
+                    </div>
+                </div>
+            </div>
+            <div class="modal" id="con-modal-centesimas">
+                <div class="close-btn" onclick="con_closeModal('centesimas')">✕</div>
+                <div class="modal-content">
+                    <h2 class="modal-title">CENTÉSIMAS</h2>
+                    <div class="modal-square">
+                        <div class="grid grid-100" id="con-modal-grid-centesimas"></div>
+                    </div>
+                    <div class="modal-info">
+                        Cuando dividimos la unidad en <span class="highlight">100 partes iguales</span>,<br>
+                        cada parte es una <span class="highlight">centésima</span> (1/100 = 0,01)
+                    </div>
+                </div>
+            </div>
+            <div class="modal" id="con-modal-milesimas">
+                <div class="close-btn" onclick="con_closeModal('milesimas')">✕</div>
+                <div class="modal-content">
+                    <h2 class="modal-title">MILÉSIMAS</h2>
+                    <div class="modal-square">
+                        <div class="grid grid-1000" id="con-modal-grid-milesimas"></div>
+                    </div>
+                    <div class="modal-info">
+                        Cuando dividimos la unidad en <span class="highlight">1.000 partes iguales</span>,<br>
+                        cada parte es una <span class="highlight">milésima</span> (1/1000 = 0,001)
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div id="app-representacion" class="app-view">
+            <h1>REPRESENTACIÓN DE NÚMEROS DECIMALES</h1>
+            <div class="input-section">
+                <label>
+                    Introduce un número decimal (ej. 2.875):
+                    <input type="number" id="rep-decimalInput" step="0.001" min="0" placeholder="2.875">
+                </label>
+                <button onclick="rep_renderDecimal()">Representar</button>
+                <button onclick="rep_clearRepresentation()" class="clear-btn">Limpiar</button>
+                <div id="rep-errorMessage" class="error"></div>
+            </div>
+
+            <div class="container" id="rep-representationContainer">
+                </div>
+
+            <div class="modal" id="rep-modal-unidad">
+                <div class="close-btn" onclick="rep_closeModal('unidad')">✕</div>
+                <div class="modal-content">
+                    <h2 class="modal-title">UNIDADES</h2>
+                    <div class="modal-square" id="rep-modal-square-unidad"></div>
+                    <div class="modal-info" id="rep-modal-info-unidad"></div>
+                </div>
+            </div>
+            <div class="modal" id="rep-modal-decimas">
+                <div class="close-btn" onclick="rep_closeModal('decimas')">✕</div>
+                <div class="modal-content">
+                    <h2 class="modal-title">DÉCIMAS</h2>
+                    <div class="modal-square">
+                        <div class="grid grid-10" id="rep-modal-grid-decimas"></div>
+                    </div>
+                    <div class="modal-info">
+                        Cada barra = 1 décima (0.1).<br>
+                        Total coloreadas: <span id="rep-count-decimas">0</span>
+                    </div>
+                </div>
+            </div>
+            <div class="modal" id="rep-modal-centesimas">
+                <div class="close-btn" onclick="rep_closeModal('centesimas')">✕</div>
+                <div class="modal-content">
+                    <h2 class="modal-title">CENTÉSIMAS</h2>
+                    <div class="modal-square">
+                        <div class="grid grid-100" id="rep-modal-grid-centesimas"></div>
+                    </div>
+                    <div class="modal-info">
+                        Cada cuadrito = 1 centésima (0.01).<br>
+                        Total coloreados: <span id="rep-count-centesimas">0</span>
+                    </div>
+                </div>
+            </div>
+            <div class="modal" id="rep-modal-milesimas">
+                <div class="close-btn" onclick="rep_closeModal('milesimas')">✕</div>
+                <div class="modal-content">
+                    <h2 class="modal-title">MILÉSIMAS</h2>
+                    <div class="modal-square">
+                        <div class="grid grid-1000" id="rep-modal-grid-milesimas"></div>
+                    </div>
+                    <div class="modal-info">
+                        Cada cuadrito ≈ 1 milésima (0.001).<br>
+                        Total coloreados: <span id="rep-count-milesimas">0</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <script>
+        // === SCRIPT DE NAVEGACIÓN GLOBAL ===
+        function showApp(appId) {
+            // Ocultar todas las vistas
+            document.querySelectorAll('.app-view').forEach(view => {
+                view.classList.remove('active');
+            });
+            // Quitar 'active' de todos los botones
+            document.querySelectorAll('.nav-btn').forEach(btn => {
+                btn.classList.remove('active');
+            });
+
+            // Mostrar la vista seleccionada
+            document.getElementById(appId).classList.add('active');
+            // Marcar el botón como activo
+            document.getElementById('nav-btn-' + appId.split('-')[1]).classList.add('active');
+        }
+
+
+        // === SCRIPT PARA APP 1: RECTA NUMÉRICA ===
+        // Se usa una IIFE (Función autoejecutable) para aislar el scope
+        // y evitar colisiones de nombres de funciones como 'parseDecimal'.
+        (function() {
+            // Se usan los IDs prefijados: 'recta-locateBtn', 'recta-decimalInput', etc.
+            document.getElementById('recta-locateBtn').addEventListener('click', locateDecimal);
+            document.getElementById('recta-decimalInput').addEventListener('keypress', function(e) {
+                if (e.key === 'Enter') locateDecimal();
+            });
+
+            function parseDecimal(input) {
+                let clean = input.trim().replace(/,/g, '.');
+                return parseFloat(clean);
+            }
+
+            function formatToLocale(num) {
+                return num.toLocaleString('es-ES', { minimumFractionDigits: 0, maximumFractionDigits: 3 });
+            }
+
+            function locateDecimal() {
+                const input = document.getElementById('recta-decimalInput').value;
+                const errorDiv = document.getElementById('recta-errorMessage');
+                errorDiv.textContent = '';
+
+                if (!input) {
+                    errorDiv.textContent = '⚠️ Introduce un número decimal.';
+                    return;
+                }
+
+                const num = parseDecimal(input);
+                if (isNaN(num)) {
+                    errorDiv.textContent = '❌ Formato inválido. Usa números como 1.376 o 2,5.';
+                    return;
+                }
+
+                if (Math.abs(num) > 1000) {
+                    errorDiv.textContent = '📏 Usa un número entre -1000 y 1000.';
+                    return;
+                }
+
+                document.getElementById('recta-section2').classList.remove('hidden');
+                document.getElementById('recta-section3').classList.remove('hidden');
+                document.getElementById('recta-section4').classList.remove('hidden');
+                
+                drawUnitsLine(num);
+                drawTenthsLine(num);
+                drawHundredthsLine(num);
+                drawThousandthsLine(num);
+            }
+
+            // === UNIDADES ===
+            function drawUnitsLine(num) {
+                const container = document.getElementById('recta-lineUnits');
+                container.innerHTML = '<div class="line"></div>';
+                const start = Math.floor(num / 10) * 10;
+                const end = start + 10;
+
+                for (let i = 0; i <= 10; i++) {
+                    const value = start + i;
+                    const percent = 5 + (i / 10) * 90;
+                    const tick = document.createElement('div');
+                    tick.className = 'tick';
+                    tick.style.left = `${percent}%`;
+                    const label = document.createElement('div');
+                    label.className = 'tick-label';
+                    label.textContent = value.toLocaleString('es-ES');
+                    tick.appendChild(label);
+                    container.appendChild(tick);
+                }
+                const pos = ((num - start) / (end - start)) * 90;
+                const markerPercent = 5 + pos;
+                const marker = document.createElement('div');
+                marker.className = 'marker';
+                marker.style.left = `${markerPercent}%`;
+                const label = document.createElement('div');
+                label.className = 'marker-label';
+                label.textContent = formatToLocale(num);
+                marker.appendChild(label);
+                container.appendChild(marker);
+            }
+
+            // === DÉCIMAS ===
+            function drawTenthsLine(num) {
+                const container = document.getElementById('recta-lineTenths');
+                container.innerHTML = '<div class="line"></div>';
+                const start = Math.floor(num);
+                for (let i = 0; i <= 10; i++) {
+                    const value = start + i * 0.1;
+                    const percent = 5 + (i / 10) * 90;
+                    const tick = document.createElement('div');
+                    tick.className = 'tick';
+                    tick.style.left = `${percent}%`;
+                    const label = document.createElement('div');
+                    label.className = 'tick-label';
+                    label.textContent = value.toLocaleString('es-ES', {minimumFractionDigits: 1, maximumFractionDigits: 1});
+                    tick.appendChild(label);
+                    container.appendChild(tick);
+                }
+                const pos = (num - start) * 10 * 9;
+                const markerPercent = 5 + pos;
+                const marker = document.createElement('div');
+                marker.className = 'marker';
+                marker.style.left = `${markerPercent}%`;
+                const label = document.createElement('div');
+                label.className = 'marker-label';
+                label.textContent = formatToLocale(num);
+                marker.appendChild(label);
+                container.appendChild(marker);
+            }
+
+            // === CENTÉSIMAS ===
+            function drawHundredthsLine(num) {
+                const container = document.getElementById('recta-lineHundredths');
+                container.innerHTML = '<div class="line"></div>';
+                const start = Math.floor(num * 10) / 10;
+                for (let i = 0; i <= 10; i++) {
+                    const value = start + i * 0.01;
+                    const percent = 5 + (i / 10) * 90;
+                    const tick = document.createElement('div');
+                    tick.className = 'tick';
+                    tick.style.left = `${percent}%`;
+                    const label = document.createElement('div');
+                    label.className = 'tick-label';
+                    label.textContent = value.toLocaleString('es-ES', {minimumFractionDigits: 2, maximumFractionDigits: 2});
+                    tick.appendChild(label);
+                    container.appendChild(tick);
+                }
+                const pos = ((num - start) / 0.1) * 90;
+                const markerPercent = 5 + pos;
+                const marker = document.createElement('div');
+                marker.className = 'marker';
+                marker.style.left = `${markerPercent}%`;
+                const label = document.createElement('div');
+                label.className = 'marker-label';
+                label.textContent = formatToLocale(num);
+                marker.appendChild(label);
+                container.appendChild(marker);
+            }
+
+            // === MILÉSIMAS ===
+            function drawThousandthsLine(num) {
+                const container = document.getElementById('recta-lineThousandths');
+                container.innerHTML = '<div class="line"></div>';
+                const start = Math.floor(num * 100) / 100;
+                for (let i = 0; i <= 10; i++) {
+                    const value = start + i * 0.001;
+                    const percent = 5 + (i / 10) * 90;
+                    const tick = document.createElement('div');
+                    tick.className = 'tick';
+                    tick.style.left = `${percent}%`;
+                    const label = document.createElement('div');
+                    label.className = 'tick-label';
+                    label.textContent = value.toLocaleString('es-ES', {minimumFractionDigits: 3, maximumFractionDigits: 3});
+                    tick.appendChild(label);
+                    container.appendChild(tick);
+                }
+                const pos = ((num - start) / 0.01) * 90;
+                const markerPercent = 5 + pos;
+                const marker = document.createElement('div');
+                marker.className = 'marker';
+                marker.style.left = `${markerPercent}%`;
+                const label = document.createElement('div');
+                label.className = 'marker-label';
+                label.textContent = formatToLocale(num);
+                marker.appendChild(label);
+                container.appendChild(marker);
+            }
+        })();
+
+
+        // === SCRIPT PARA APP 2: CONCEPTOS (CUADROS) ===
+        // Funciones prefijadas con 'con_' para evitar colisiones
+        // Estas deben ser globales porque son llamadas por 'onclick'
+        function con_generateGrid(elementId, cells) {
+            const grid = document.getElementById(elementId);
+            for (let i = 0; i < cells; i++) {
+                const cell = document.createElement('div');
+                cell.className = 'grid-cell';
+                grid.appendChild(cell);
+            }
+        }
+        
+        function con_openModal(type) {
+            const modal = document.getElementById('con-modal-' + type);
+            modal.classList.add('active');
+            // document.body.style.overflow = 'hidden'; // Se maneja a nivel global
+        }
+        
+        function con_closeModal(type) {
+            const modal = document.getElementById('con-modal-' + type);
+            modal.classList.remove('active');
+            // document.body.style.overflow = 'auto'; // Se maneja a nivel global
+        }
+
+        // Generar cuadrículas de vista previa para App 2 (IDs prefijados)
+        con_generateGrid('con-preview-decimas', 10);
+        con_generateGrid('con-preview-centesimas', 100);
+        con_generateGrid('con-preview-milesimas', 1024);
+        
+        con_generateGrid('con-modal-grid-decimas', 10);
+        con_generateGrid('con-modal-grid-centesimas', 100);
+        con_generateGrid('con-modal-grid-milesimas', 1024);
+        
+        // Listeners para cerrar modales de App 2 (aislados)
+        (function() {
+            document.querySelectorAll('#app-conceptos .modal').forEach(modal => {
+                modal.addEventListener('click', function(e) {
+                    if (e.target === this) {
+                        this.classList.remove('active');
+                    }
+                });
+            });
+            
+            document.addEventListener('keydown', function(e) {
+                if (e.key === 'Escape') {
+                    document.querySelectorAll('#app-conceptos .modal').forEach(modal => {
+                        modal.classList.remove('active');
+                    });
+                }
+            });
+        })();
+
+
+        // === SCRIPT PARA APP 3: REPRESENTACIÓN DINÁMICA ===
+        // Funciones prefijadas con 'rep_' para evitar colisiones
+        // Estas deben ser globales porque son llamadas por 'onclick'
+        
+        function rep_clearContainer(id) {
+            document.getElementById(id).innerHTML = '';
+        }
+
+        function rep_createUnitCard(isFilled, index) {
+            const div = document.createElement('div');
+            div.className = 'square ' + (isFilled ? 'filled' : '');
+            div.title = isFilled ? 'Unidad completa' : 'Unidad vacía';
+            return div;
+        }
+
+        function rep_createGrid(containerId, totalCells, filledCells, cellClass = 'grid-cell') {
+            const container = document.getElementById(containerId);
+            rep_clearContainer(containerId); // Usa la función prefijada
+            for (let i = 0; i < totalCells; i++) {
+                const cell = document.createElement('div');
+                cell.className = cellClass;
+                if (i < filledCells) {
+                    cell.classList.add('filled');
+                }
+                container.appendChild(cell);
+            }
+        }
+        
+        function rep_clearRepresentation() {
+            rep_renderDefaultState(); // Usa la función prefijada
+            document.getElementById('rep-decimalInput').value = '';
+            document.getElementById('rep-errorMessage').textContent = '';
+        }
+
+        function rep_renderDefaultState() {
+            const container = document.getElementById('rep-representationContainer');
+            container.innerHTML = ''; 
+
+            const cardUnit = document.createElement('div');
+            cardUnit.className = 'card';
+            cardUnit.innerHTML = `
+                <h2 class="card-title">UNIDADES</h2>
+                <div class="square-container">
+                    <div class="square empty-unit"></div> 
+                </div>
+                <div class="formula">
+                    <span class="highlight">0 unidades</span>
+                </div>
+            `;
+            cardUnit.onclick = () => rep_openUnitsModal(0); // Usa la función prefijada
+            container.appendChild(cardUnit);
+
+            const cardDecimas = document.createElement('div');
+            cardDecimas.className = 'card';
+            cardDecimas.innerHTML = `
+                <h2 class="card-title">DÉCIMAS</h2>
+                <div class="square-container">
+                    <div class="grid grid-10" id="rep-preview-decimas"></div>
+                </div>
+                <div class="formula">
+                    0 décimas = <span class="fraction"><span class="fraction-top">0</span><span class="fraction-bottom">10</span></span> = 0
+                </div>
+            `;
+            cardDecimas.onclick = () => rep_openModal('decimas', 0, 10); // Usa la función prefijada
+            container.appendChild(cardDecimas);
+            rep_createGrid('rep-preview-decimas', 10, 0); // Usa la función prefijada
+
+            const cardCentesimas = document.createElement('div');
+            cardCentesimas.className = 'card';
+            cardCentesimas.innerHTML = `
+                <h2 class="card-title">CENTÉSIMAS</h2>
+                <div class="square-container">
+                    <div class="grid grid-100" id="rep-preview-centesimas"></div>
+                </div>
+                <div class="formula">
+                    0 centésimas = <span class="fraction"><span class="fraction-top">0</span><span class="fraction-bottom">100</span></span> = 0
+                </div>
+            `;
+            cardCentesimas.onclick = () => rep_openModal('centesimas', 0, 100); // Usa la función prefijada
+            container.appendChild(cardCentesimas);
+            rep_createGrid('rep-preview-centesimas', 100, 0); // Usa la función prefijada
+
+            const cardMilesimas = document.createElement('div');
+            cardMilesimas.className = 'card';
+            cardMilesimas.innerHTML = `
+                <h2 class="card-title">MILÉSIMAS</h2>
+                <div class="square-container">
+                    <div class="grid grid-1000" id="rep-preview-milesimas"></div>
+                </div>
+                <div class="formula">
+                    0 milésimas = <span class="fraction"><span class="fraction-top">0</span><span class="fraction-bottom">1000</span></span> = 0
+                </div>
+            `;
+            cardMilesimas.onclick = () => rep_openModal('milesimas', 0, 1000); // Usa la función prefijada
+            container.appendChild(cardMilesimas);
+            rep_createGrid('rep-preview-milesimas', 1024, 0); // Usa la función prefijada
+        }
+
+        function rep_renderDecimal() {
+            const input = document.getElementById('rep-decimalInput').value;
+            const errorDiv = document.getElementById('rep-errorMessage');
+            errorDiv.textContent = '';
+
+            if (input === '') {
+                errorDiv.textContent = 'Por favor, introduce un número.';
+                return;
+            }
+
+            let num = parseFloat(input);
+            if (isNaN(num) || num < 0) {
+                errorDiv.textContent = 'Introduce un número decimal válido ≥ 0.';
+                return;
+            }
+
+            num = Math.round(num * 1000) / 1000;
+            const whole = Math.floor(num);
+            const totalMilesimas = Math.round((num - whole) * 1000);
+            const decimas = Math.floor(totalMilesimas / 100);
+            const centesimas = Math.floor((totalMilesimas % 100) / 10);
+            const milesimas = totalMilesimas % 10;
+            
+            const container = document.getElementById('rep-representationContainer');
+            container.innerHTML = '';
+
+            if (whole > 0) {
+                for (let i = 0; i < whole; i++) {
+                    const card = document.createElement('div');
+                    card.className = 'card';
+                    card.innerHTML = `
+                        <h2 class="card-title">UNIDAD</h2>
+                        <div class="square-container">
+                            <div class="square filled"></div>
+                        </div>
+                        <div class="formula">
+                            <span class="highlight">1 unidad</span> = 1 entero
+                        </div>
+                    `;
+                    container.appendChild(card);
+                }
+            } else {
+                const card = document.createElement('div');
+                card.className = 'card';
+                card.innerHTML = `
+                    <h2 class="card-title">UNIDADES</h2>
+                    <div class="square-container">
+                        <div class="square empty-unit"></div> 
+                    </div>
+                    <div class="formula">
+                        <span class="highlight">0 unidades</span>
+                    </div>
+                `;
+                card.onclick = () => rep_openUnitsModal(0); // Usa la función prefijada
+                container.appendChild(card);
+            }
+
+            if (decimas > 0 || centesimas > 0 || milesimas > 0) {
+                const card = document.createElement('div');
+                card.className = 'card';
+                card.innerHTML = `
+                    <h2 class="card-title">DÉCIMAS</h2>
+                    <div class="square-container">
+                        <div class="grid grid-10" id="rep-preview-decimas"></div>
+                    </div>
+                    <div class="formula">
+                        ${decimas} décimas = <span class="fraction"><span class="fraction-top">${decimas}</span><span class="fraction-bottom">10</span></span> = ${decimas / 10} 
+                    </div>
+                `;
+                card.onclick = () => rep_openModal('decimas', decimas, 10); // Usa la función prefijada
+                container.appendChild(card);
+                rep_createGrid('rep-preview-decimas', 10, decimas); // Usa la función prefijada
+            }
+
+            if (centesimas > 0 || milesimas > 0) {
+                const card = document.createElement('div');
+                card.className = 'card';
+                card.innerHTML = `
+                    <h2 class="card-title">CENTÉSIMAS</h2>
+                    <div class="square-container">
+                        <div class="grid grid-100" id="rep-preview-centesimas"></div>
+                    </div>
+                    <div class="formula">
+                        ${centesimas} centésimas = <span class="fraction"><span class="fraction-top">${centesimas}</span><span class="fraction-bottom">100</span></span> = ${centesimas / 100}
+                    </div>
+                `;
+                card.onclick = () => rep_openModal('centesimas', centesimas, 100); // Usa la función prefijada
+                container.appendChild(card);
+                rep_createGrid('rep-preview-centesimas', 100, centesimas); // Usa la función prefijada
+            }
+
+            if (milesimas > 0) {
+                const card = document.createElement('div');
+                card.className = 'card';
+                card.innerHTML = `
+                    <h2 class="card-title">MILÉSIMAS</h2>
+                    <div class="square-container">
+                        <div class="grid grid-1000" id="rep-preview-milesimas"></div>
+                    </div>
+                    <div class="formula">
+                        ${milesimas} milésimas = <span class="fraction"><span class="fraction-top">${milesimas}</span><span class="fraction-bottom">1000</span></span> = ${milesimas / 1000}
+                    </div>
+                `;
+                card.onclick = () => rep_openModal('milesimas', milesimas, 1000); // Usa la función prefijada
+                container.appendChild(card);
+                const approxCells = Math.round((milesimas / 1000) * 1024);
+                rep_createGrid('rep-preview-milesimas', 1024, approxCells); // Usa la función prefijada
+            }
+
+            if (whole === 0 && decimas === 0 && centesimas === 0 && milesimas === 0) {
+                container.innerHTML = '<p style="color:white; font-size:20px;">El número 0 no tiene partes para representar.</p>';
+            }
+        }
+
+        function rep_openUnitsModal(count) {
+            const modal = document.getElementById('rep-modal-unidad');
+            const squareDiv = document.getElementById('rep-modal-square-unidad');
+            const infoDiv = document.getElementById('rep-modal-info-unidad');
+            squareDiv.innerHTML = ''; 
+
+            if (count === 0) {
+                squareDiv.innerHTML = '<div class="square empty-unit" style="width: 100%; height: 100%; background: #fff;"></div>';
+                infoDiv.innerHTML = `Se muestran <span class="highlight">0 unidades</span>.`;
+            } else {
+                let squareSize;
+                if (count === 1) { squareSize = 200; } 
+                else {
+                    const maxUnitsPerRow = Math.ceil(Math.sqrt(count));
+                    squareSize = Math.min(200, 250 / maxUnitsPerRow * 3);
+                }
+                for (let i = 0; i < count; i++) {
+                    const unit = document.createElement('div');
+                    unit.className = 'modal-unit';
+                    unit.style.width = squareSize + 'px';
+                    unit.style.height = squareSize + 'px';
+                    squareDiv.appendChild(unit);
+                }
+                infoDiv.innerHTML = `Se muestran <span class="highlight">${count} unidades</span> completas.`;
+            }
+            modal.classList.add('active');
+        }
+
+        function rep_openModal(type, filled, total) {
+            let modalId, gridId, countId, title;
+            if (type === 'decimas') {
+                modalId = 'rep-modal-decimas';
+                gridId = 'rep-modal-grid-decimas';
+                countId = 'rep-count-decimas';
+                rep_createGrid(gridId, 10, filled); // Usa la función prefijada
+                document.getElementById(countId).textContent = filled;
+            } else if (type === 'centesimas') {
+                modalId = 'rep-modal-centesimas';
+                gridId = 'rep-modal-grid-centesimas';
+                countId = 'rep-count-centesimas';
+                rep_createGrid(gridId, 100, filled); // Usa la función prefijada
+                document.getElementById(countId).textContent = filled;
+            } else if (type === 'milesimas') {
+                modalId = 'rep-modal-milesimas';
+                gridId = 'rep-modal-grid-milesimas';
+                countId = 'rep-count-milesimas';
+                const approx = Math.round((filled / 1000) * 1024);
+                rep_createGrid(gridId, 1024, approx); // Usa la función prefijada
+                document.getElementById(countId).textContent = filled;
+            }
+            document.getElementById(modalId).classList.add('active');
+        }
+
+        function rep_closeModal(type) {
+            const modal = document.getElementById('rep-modal-' + type);
+            modal.classList.remove('active');
+        }
+
+        // Listeners para cerrar modales de App 3 (aislados)
+        (function() {
+            document.querySelectorAll('#app-representacion .modal').forEach(modal => {
+                modal.addEventListener('click', function(e) {
+                    if (e.target === this) {
+                        this.classList.remove('active');
+                    }
+                });
+            });
+
+            document.addEventListener('keydown', function(e) {
+                if (e.key === 'Escape') {
+                    document.querySelectorAll('#app-representacion .modal').forEach(modal => {
+                        modal.classList.remove('active');
+                    });
+                }
+            });
+        })();
+
+        // Inicializar el estado por defecto de la App 3
+        rep_renderDefaultState();
+
+    </script>
+</body>
+</html>
