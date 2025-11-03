@@ -5,7 +5,6 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Mundo Decimal: Herramientas Integradas</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
-    
     <style>
         /* === ESTILOS GLOBALES Y DE NAVEGACIÓN === */
         * {
@@ -14,7 +13,6 @@
             box-sizing: border-box;
             font-family: 'Segoe UI', 'Helvetica Neue', sans-serif;
         }
-
         :root {
             --primary: #6a11cb;
             --secondary: #2575fc;
@@ -24,15 +22,16 @@
             --gray: #e0e0ff;
             --green: #7cbe29;
             --blue: #75AADB;
+            --marker1: #ff6b6b;
+            --marker2: #48bb78;
+            --marker3: #f6ad55;
         }
-
         body {
             background-color: #f0f2f5;
             min-height: 100vh;
             display: flex;
             flex-direction: column;
         }
-
         .main-header {
             background: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%);
             color: white;
@@ -41,12 +40,10 @@
             box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
             z-index: 100;
         }
-
         .main-header h1 {
             font-size: 28px;
             font-weight: 700;
         }
-
         .main-nav {
             background: white;
             display: flex;
@@ -58,7 +55,6 @@
             top: 0;
             flex-wrap: wrap;
         }
-
         .nav-btn {
             padding: 12px 20px;
             font-size: 16px;
@@ -71,30 +67,43 @@
             transition: all 0.3s ease;
             margin: 5px;
         }
-
         .nav-btn:hover {
             color: var(--secondary);
         }
-
         .nav-btn.active {
             color: var(--primary);
             border-bottom-color: var(--primary);
         }
-
         main {
             flex: 1;
             padding: 20px;
             overflow: auto;
         }
-
         .app-view {
             display: none; /* Se ocultan todas por defecto */
         }
-
         .app-view.active {
             display: block; /* Se muestra la activa */
         }
-
+        .compare-btn {
+            background: linear-gradient(to right, #667eea, #764ba2);
+            color: white;
+            border: none;
+            border-radius: 50px;
+            padding: 10px 20px;
+            font-size: 15px;
+            margin-top: 10px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 8px rgba(102, 126, 234, 0.3);
+        }
+        .compare-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 12px rgba(102, 126, 234, 0.5);
+        }
+        .compare-btn i {
+            margin-right: 5px;
+        }
         /* === ESTILOS PARA APP 1: RECTA NUMÉRICA (RECTA NUMERICA.HTML) === */
         /* Adaptado: el 'body' original es ahora el div #app-recta */
         #app-recta {
@@ -104,7 +113,6 @@
             padding: 20px 0;
             min-height: 80vh;
         }
-
         #app-recta .card {
             background: white;
             border-radius: 24px;
@@ -114,20 +122,17 @@
             overflow: hidden;
             position: relative;
         }
-
         #app-recta .header {
             background: linear-gradient(to right, var(--primary), var(--secondary));
             color: white;
             padding: 30px 25px;
             text-align: center;
         }
-
         #app-recta .header h1 {
             font-size: 28px;
             font-weight: 700;
             margin-bottom: 10px;
         }
-
         #app-recta .header p {
             opacity: 0.9;
             font-size: 16px;
@@ -135,13 +140,11 @@
             margin: 0 auto;
             line-height: 1.5;
         }
-
         #app-recta .input-section {
             padding: 30px;
             text-align: center;
             background: var(--light);
         }
-
         #app-recta .input-group {
             display: flex;
             justify-content: center;
@@ -149,7 +152,6 @@
             flex-wrap: wrap;
             margin-top: 15px;
         }
-
         #app-recta input[type="text"] {
             padding: 14px 20px;
             font-size: 18px;
@@ -161,12 +163,10 @@
             outline: none;
             box-shadow: 0 4px 10px rgba(0,0,0,0.05);
         }
-
         #app-recta input[type="text"]:focus {
             border-color: var(--secondary);
             box-shadow: 0 4px 15px rgba(37, 117, 252, 0.3);
         }
-
         #app-recta button {
             background: linear-gradient(to right, var(--primary), var(--secondary));
             color: white;
@@ -179,12 +179,10 @@
             transition: all 0.3s ease;
             box-shadow: 0 6px 15px rgba(37, 117, 252, 0.4);
         }
-
         #app-recta button:hover {
             transform: translateY(-2px);
             box-shadow: 0 8px 20px rgba(37, 117, 252, 0.6);
         }
-
         #app-recta .error {
             color: #e74c3c;
             margin-top: 15px;
@@ -192,16 +190,13 @@
             min-height: 22px;
             font-size: 15px;
         }
-
         #app-recta .number-line-container {
             padding: 25px;
             border-bottom: 1px solid #f0f0f0;
         }
-
         #app-recta .number-line-container:last-child {
             border-bottom: none;
         }
-
         #app-recta .number-line-title {
             display: flex;
             align-items: center;
@@ -211,13 +206,11 @@
             color: var(--primary);
             margin-bottom: 20px;
         }
-
         #app-recta .number-line {
             position: relative;
             height: 90px;
             margin-top: 15px;
         }
-
         #app-recta .line {
             position: absolute;
             top: 40px;
@@ -227,7 +220,6 @@
             background: linear-gradient(to right, #ccc, #999);
             border-radius: 2px;
         }
-
         #app-recta .tick {
             position: absolute;
             top: 38px;
@@ -235,7 +227,6 @@
             height: 12px;
             background: #555;
         }
-
         #app-recta .tick-label {
             position: absolute;
             top: 55px;
@@ -247,7 +238,6 @@
             white-space: nowrap;
             width: max-content;
         }
-
         #app-recta .marker {
             position: absolute;
             top: 25px;
@@ -258,7 +248,6 @@
             transform: translateX(-50%);
             box-shadow: 0 0 8px rgba(255, 107, 107, 0.7);
         }
-
         #app-recta .marker-label {
             position: absolute;
             top: -32px;
@@ -273,17 +262,147 @@
             white-space: nowrap;
             box-shadow: 0 3px 8px rgba(255, 107, 107, 0.4);
         }
-
         #app-recta .hidden {
             display: none;
         }
-
         #app-recta .example {
             margin-top: 12px;
             font-size: 14px;
             color: #666;
         }
-
+        
+        /* === ESTILOS PARA LA HERRAMIENTA DE COMPARACIÓN === */
+        #recta-comparison-container {
+            padding: 20px;
+            background: #f8f9ff;
+            border-radius: 20px;
+            margin: 20px 15px;
+            box-shadow: 0 10px 30px rgba(102, 126, 234, 0.15);
+        }
+        #recta-comparison-container .header {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 25px;
+            text-align: center;
+            border-radius: 15px;
+            margin-bottom: 20px;
+        }
+        #recta-comparison-container .header h2 {
+            font-size: 24px;
+            font-weight: 700;
+            margin-bottom: 8px;
+        }
+        #recta-comparison-container .input-group-compare {
+            display: flex;
+            justify-content: center;
+            gap: 10px;
+            flex-wrap: wrap;
+            margin: 15px 0;
+        }
+        #recta-comparison-container input[type="text"] {
+            padding: 12px;
+            font-size: 16px;
+            border: 3px solid #e0e0e0;
+            border-radius: 12px;
+            width: 160px;
+            text-align: center;
+            transition: all 0.3s;
+            font-weight: 600;
+        }
+        #recta-comparison-container input#comp-num1 { border-color: var(--marker1); }
+        #recta-comparison-container input#comp-num2 { border-color: var(--marker2); }
+        #recta-comparison-container input#comp-num3 { border-color: var(--marker3); }
+        #recta-comparison-container input[type="text"]:focus {
+            box-shadow: 0 0 10px rgba(102, 126, 234, 0.4);
+            transform: translateY(-1px);
+        }
+        #recta-comparison-container button#comp-compareBtn {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            padding: 12px 25px;
+            font-size: 16px;
+            margin-top: 10px;
+            box-shadow: 0 4px 10px rgba(102, 126, 234, 0.3);
+        }
+        #recta-comparison-container .comparison-line {
+            position: relative;
+            height: 70px;
+            background: white;
+            border-radius: 12px;
+            margin: 25px 0;
+            padding: 15px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.08);
+        }
+        #recta-comparison-container .line-comparison {
+            position: absolute;
+            top: 35px;
+            left: 5%;
+            right: 5%;
+            height: 4px;
+            background: linear-gradient(90deg, #667eea 0%, #764ba2 50%, #667eea 100%);
+            border-radius: 2px;
+        }
+        #recta-comparison-container .tick-comparison {
+            position: absolute;
+            top: 33px;
+            width: 2px;
+            height: 10px;
+            background: #667eea;
+        }
+        #recta-comparison-container .tick-label-comparison {
+            position: absolute;
+            top: 45px;
+            left: 50%;
+            transform: translateX(-50%);
+            font-size: 12px;
+            color: #4a5568;
+        }
+        #recta-comparison-container .marker-comparison {
+            position: absolute;
+            top: 20px;
+            width: 5px;
+            height: 25px;
+            border-radius: 2px;
+            transform: translateX(-50%);
+            box-shadow: 0 0 8px rgba(0,0,0,0.3);
+        }
+        #recta-comparison-container .marker-1 { background: var(--marker1); }
+        #recta-comparison-container .marker-2 { background: var(--marker2); }
+        #recta-comparison-container .marker-3 { background: var(--marker3); }
+        #recta-comparison-container .marker-label-comparison {
+            position: absolute;
+            top: -30px;
+            left: 50%;
+            transform: translateX(-50%);
+            padding: 4px 8px;
+            border-radius: 10px;
+            font-size: 13px;
+            font-weight: 600;
+            white-space: nowrap;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+        }
+        #recta-comparison-container .label-1 { 
+            background: linear-gradient(135deg, #ff6b6b 0%, #ff5252 100%);
+            color: white;
+        }
+        #recta-comparison-container .label-2 { 
+            background: linear-gradient(135deg, #48bb78 0%, #38a169 100%);
+            color: white;
+        }
+        #recta-comparison-container .label-3 { 
+            background: linear-gradient(135deg, #f6ad55 0%, #ed8936 100%);
+            color: white;
+        }
+        #recta-comparison-container #comp-comparison-result {
+            padding: 15px;
+            background: linear-gradient(135deg, #667eea15 0%, #764ba215 100%);
+            text-align: center;
+            font-size: 1.2em;
+            font-weight: 700;
+            color: var(--dark);
+            border-radius: 12px;
+            margin-top: 15px;
+            border: 1px solid rgba(102, 126, 234, 0.3);
+        }
         @media (max-width: 650px) {
             #app-recta .input-group {
                 flex-direction: column;
@@ -296,9 +415,15 @@
             #app-recta .tick-label {
                 font-size: 11px;
             }
+            #recta-comparison-container .input-group-compare {
+                flex-direction: column;
+                align-items: center;
+            }
+            #recta-comparison-container input[type="text"] {
+                width: 100%;
+                max-width: 250px;
+            }
         }
-
-
         /* === ESTILOS PARA APP 2: CONCEPTOS (CUADROS.HTML) === */
         /* Adaptado: el 'body' original es ahora el div #app-conceptos */
         #app-conceptos {
@@ -312,7 +437,6 @@
             justify-content: center;
             border-radius: 20px;
         }
-
         #app-conceptos h1 {
             color: white;
             font-size: 36px;
@@ -320,14 +444,12 @@
             margin-bottom: 20px;
             text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
         }
-
         #app-conceptos .subtitle {
             color: rgba(255,255,255,0.9);
             font-size: 18px;
             text-align: center;
             margin-bottom: 40px;
         }
-
         #app-conceptos .container {
             display: flex;
             gap: 40px;
@@ -336,7 +458,6 @@
             align-items: flex-start;
             max-width: 1400px;
         }
-
         #app-conceptos .card {
             background: white;
             border-radius: 20px;
@@ -347,19 +468,16 @@
             text-align: center;
             min-width: 300px;
         }
-
         #app-conceptos .card:hover {
             transform: translateY(-10px);
             box-shadow: 0 15px 50px rgba(0,0,0,0.3);
         }
-
         #app-conceptos .card-title {
             font-size: 24px;
             color: #333;
             margin-bottom: 20px;
             font-weight: 600;
         }
-
         #app-conceptos .square-container {
             width: 200px;
             height: 200px;
@@ -367,14 +485,12 @@
             overflow: hidden;
             box-shadow: 0 4px 15px rgba(0,0,0,0.1);
         }
-
         #app-conceptos .square {
             width: 100%;
             height: 100%;
             background: var(--green);
             border: 3px solid #000;
         }
-
         #app-conceptos .grid {
             display: grid;
             width: 100%;
@@ -382,43 +498,36 @@
             background-color: var(--green);
             border: 3px solid #000;
         }
-
         #app-conceptos .grid-10 { grid-template-columns: repeat(10, 1fr); }
         #app-conceptos .grid-100 { grid-template-columns: repeat(10, 1fr); grid-template-rows: repeat(10, 1fr); }
         #app-conceptos .grid-1000 { grid-template-columns: repeat(32, 1fr); grid-template-rows: repeat(32, 1fr); }
         #app-conceptos .grid-cell { border: 0.5px solid #333; background: var(--green); }
         #app-conceptos .grid-1000 .grid-cell { border: 0.2px solid #555; }
-
         #app-conceptos .formula {
             font-size: 16px;
             color: #555;
             margin: 10px 0;
             line-height: 1.6;
         }
-
         #app-conceptos .fraction {
             display: inline-block;
             vertical-align: middle;
             text-align: center;
             margin: 0 3px;
         }
-
         #app-conceptos .fraction-top {
             display: block;
             border-bottom: 2px solid #333;
             padding-bottom: 2px;
         }
-
         #app-conceptos .fraction-bottom {
             display: block;
             padding-top: 2px;
         }
-
         #app-conceptos .highlight {
             color: #667eea;
             font-weight: 700;
         }
-
         /* Modal de pantalla completa (App 2) */
         #app-conceptos .modal {
             display: none;
@@ -431,15 +540,12 @@
             z-index: 1000;
             animation: app-conceptos-fadeIn 0.3s ease;
         }
-
         #app-conceptos .modal.active {
             display: flex;
             align-items: center;
             justify-content: center;
         }
-
         @keyframes app-conceptos-fadeIn { from { opacity: 0; } to { opacity: 1; } }
-
         #app-conceptos .modal-content {
             position: relative;
             padding: 20px;
@@ -449,16 +555,13 @@
             justify-content: center;
             animation: app-conceptos-zoomIn 0.3s ease;
         }
-
         @keyframes app-conceptos-zoomIn { from { transform: scale(0.5); opacity: 0; } to { transform: scale(1); opacity: 1; } }
-
         #app-conceptos .modal-title {
             color: white;
             font-size: 48px;
             margin-bottom: 30px;
             text-shadow: 2px 2px 8px rgba(0,0,0,0.5);
         }
-
         #app-conceptos .modal-square {
             width: 70vmin;
             height: 70vmin;
@@ -467,7 +570,6 @@
             margin-bottom: 30px;
             flex-shrink: 0;
         }
-
         #app-conceptos .modal-info {
             background: rgba(255,255,255,0.1);
             backdrop-filter: blur(10px);
@@ -479,7 +581,6 @@
             max-width: 800px;
             line-height: 1.8;
         }
-
         #app-conceptos .close-btn {
             position: absolute;
             top: 30px;
@@ -498,12 +599,10 @@
             transition: all 0.3s ease;
             backdrop-filter: blur(10px);
         }
-
         #app-conceptos .close-btn:hover {
             background: rgba(255,255,255,0.3);
             transform: rotate(90deg);
         }
-
         @media (max-width: 768px) {
             #app-conceptos .container { gap: 20px; }
             #app-conceptos .card { min-width: 250px; padding: 20px; }
@@ -512,8 +611,6 @@
             #app-conceptos .modal-title { font-size: 32px; }
             #app-conceptos .modal-info { font-size: 18px; padding: 20px; }
         }
-
-        
         /* === ESTILOS PARA APP 3: REPRESENTACIÓN DINÁMICA (REPRESENTACION CUADROS.HTML) === */
         /* Adaptado: el 'body' original es ahora el div #app-representacion */
         #app-representacion {
@@ -527,7 +624,6 @@
             justify-content: flex-start;
             border-radius: 20px;
         }
-        
         #app-representacion h1 {
             color: white;
             font-size: 36px;
@@ -535,7 +631,6 @@
             margin: 20px 0;
             text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
         }
-
         #app-representacion .input-section {
             background: white;
             padding: 20px 30px;
@@ -546,7 +641,6 @@
             max-width: 600px;
             text-align: center;
         }
-
         #app-representacion .input-section input {
             padding: 12px;
             font-size: 18px;
@@ -556,7 +650,6 @@
             text-align: center;
             margin: 5px 10px;
         }
-
         #app-representacion .input-section button {
             padding: 12px 24px;
             font-size: 18px;
@@ -568,17 +661,14 @@
             transition: background 0.3s;
             margin: 5px;
         }
-
         #app-representacion .input-section button:hover { background: #5a6fd8; }
         #app-representacion .input-section button.clear-btn { background: #e2e8f0; color: #4a5568; }
         #app-representacion .input-section button.clear-btn:hover { background: #cbd5e0; }
-
         #app-representacion .error {
             color: #e74c3c;
             margin-top: 10px;
             font-size: 16px;
         }
-        
         #app-representacion .container {
             display: flex;
             gap: 30px;
@@ -587,7 +677,6 @@
             align-items: flex-start;
             max-width: 1400px;
         }
-        
         #app-representacion .card {
             background: white;
             border-radius: 20px;
@@ -599,19 +688,16 @@
             min-width: 220px;
             max-width: 280px;
         }
-        
         #app-representacion .card:hover {
             transform: translateY(-8px);
             box-shadow: 0 15px 50px rgba(0,0,0,0.3);
         }
-        
         #app-representacion .card-title {
             font-size: 20px;
             color: #333;
             margin-bottom: 15px;
             font-weight: 600;
         }
-        
         #app-representacion .square-container {
             width: 180px;
             height: 180px;
@@ -625,24 +711,19 @@
             gap: 10px;
             padding: 10px;
         }
-        
         #app-representacion .square {
             width: 100%;
             height: 100%;
             background: #ddd;
             border: 3px solid #000;
         }
-
         #app-representacion .square.empty-unit { background: #fff; }
-
         #app-representacion .unit-square {
             background: var(--green);
             border: 3px solid #000;
             flex-shrink: 0;
         }
-        
         #app-representacion .filled { background: var(--green) !important; }
-        
         #app-representacion .grid {
             display: grid;
             width: 100%;
@@ -650,34 +731,28 @@
             background-color: #eee;
             border: 3px solid #000;
         }
-        
         #app-representacion .grid-10 { grid-template-columns: repeat(10, 1fr); }
         #app-representacion .grid-100 { grid-template-columns: repeat(10, 1fr); grid-template-rows: repeat(10, 1fr); }
         #app-representacion .grid-1000 { grid-template-columns: repeat(32, 1fr); grid-template-rows: repeat(32, 1fr); }
-        
         #app-representacion .grid-cell { border: 0.5px solid #000; background: #eee; }
         #app-representacion .grid-1000 .grid-cell { border: 0.2px solid #000; }
-        
         #app-representacion .formula {
             font-size: 14px;
             color: #555;
             margin: 10px 0;
             line-height: 1.5;
         }
-        
         #app-representacion .fraction {
             display: inline-block;
             vertical-align: middle;
             text-align: center;
             margin: 0 3px;
         }
-        
         #app-representacion .fraction-top {
             display: block;
             border-bottom: 2px solid #333;
             padding-bottom: 2px;
         }
-        
         #app-representacion .fraction-bottom { display: block; padding-top: 2px; }
         #app-representacion .highlight { color: #667eea; font-weight: 700; }
         #app-representacion .units-container {
@@ -687,7 +762,6 @@
             gap: 10px;
             padding: 10px;
         }
-        
         /* Modal de pantalla completa (App 3) */
         #app-representacion .modal {
             display: none;
@@ -700,15 +774,12 @@
             z-index: 1000;
             animation: app-rep-fadeIn 0.3s ease;
         }
-        
         #app-representacion .modal.active {
             display: flex;
             align-items: center;
             justify-content: center;
         }
-        
         @keyframes app-rep-fadeIn { from { opacity: 0; } to { opacity: 1; } }
-        
         #app-representacion .modal-content {
             position: relative;
             padding: 20px;
@@ -718,16 +789,13 @@
             justify-content: center;
             animation: app-rep-zoomIn 0.3s ease;
         }
-        
         @keyframes app-rep-zoomIn { from { transform: scale(0.5); opacity: 0; } to { transform: scale(1); opacity: 1; } }
-        
         #app-representacion .modal-title {
             color: white;
             font-size: 40px;
             margin-bottom: 25px;
             text-shadow: 2px 2px 8px rgba(0,0,0,0.5);
         }
-        
         #app-representacion .modal-square {
             width: 65vmin;
             height: 65vmin;
@@ -742,14 +810,12 @@
             gap: 20px;
             padding: 20px;
         }
-        
         #app-representacion .modal-unit {
             width: 120px;
             height: 120px;
             background: var(--green);
             border: 3px solid #000;
         }
-        
         #app-representacion .modal-info {
             background: rgba(255,255,255,0.1);
             backdrop-filter: blur(10px);
@@ -761,7 +827,6 @@
             max-width: 750px;
             line-height: 1.7;
         }
-        
         #app-representacion .close-btn {
             position: absolute;
             top: 25px;
@@ -780,12 +845,10 @@
             transition: all 0.3s ease;
             backdrop-filter: blur(10px);
         }
-        
         #app-representacion .close-btn:hover {
             background: rgba(255,255,255,0.3);
             transform: rotate(90deg);
         }
-        
         @media (max-width: 768px) {
             #app-representacion .container { gap: 15px; }
             #app-representacion .card { min-width: 180px; padding: 18px; }
@@ -799,11 +862,9 @@
     </style>
 </head>
 <body>
-
     <header class="main-header">
         <h1>Mundo Decimal: Herramientas Integradas 🔢</h1>
     </header>
-
     <nav class="main-nav">
         <button id="nav-btn-recta" class="nav-btn active" onclick="showApp('app-recta')">
             <i class="fas fa-ruler-horizontal"></i> Recta Numérica
@@ -815,7 +876,6 @@
             <i class="fas fa-book-open"></i> Conceptos (Unidad, Décima...)
         </button>
     </nav>
-
     <main>
         <div id="app-recta" class="app-view active">
             <div class="card">
@@ -830,6 +890,9 @@
                             <i class="fas fa-map-marker-alt"></i> Ubicar
                         </button>
                     </div>
+                    <button id="recta-toggle-comparison" class="compare-btn">
+                        <i class="fas fa-balance-scale"></i> Comparar números decimales
+                    </button>
                     <div class="example">💡 Ejemplos: <code>1.376</code>, <code>-0,5</code>, <code>3,141</code></div>
                     <div id="recta-errorMessage" class="error"></div>
                 </div>
@@ -865,9 +928,44 @@
                         <div class="line"></div>
                     </div>
                 </div>
+                
+                <!-- Contenedor para la herramienta de comparación -->
+                <div id="recta-comparison-container" class="hidden">
+                    <div class="header">
+                        <h2><i class="fas fa-balance-scale"></i> Comparador Decimal en Recta Numérica</h2>
+                        <p>Introduce hasta 3 números decimales para compararlos</p>
+                    </div>
+                    
+                    <div class="input-section">
+                        <div class="input-group-compare">
+                            <input type="text" id="comp-num1" placeholder="Número 1 (Ej. 1.5)">
+                            <input type="text" id="comp-num2" placeholder="Número 2 (Ej. -0.2)">
+                            <input type="text" id="comp-num3" placeholder="Número 3 (Ej. 0.75)">
+                        </div>
+                        <button id="comp-compareBtn">
+                            <i class="fas fa-sort-numeric-down"></i> Comparar
+                        </button>
+                        <div id="comp-errorMessage" class="error"></div>
+                    </div>
+                    
+                    <div class="number-line-container" id="comp-static-line-container">
+                        <div class="number-line-title">Recta Numérica de Referencia</div>
+                        <div class="comparison-line" id="comp-staticNumberLine">
+                            <div class="line-comparison"></div>
+                        </div>
+                    </div>
+                    
+                    <div class="number-line-container hidden" id="comp-comparison-section">
+                        <div class="number-line-title">Comparación Visual</div>
+                        <div class="comparison-line" id="comp-mainNumberLine">
+                            <div class="line-comparison"></div>
+                        </div>
+                    </div>
+                    
+                    <div id="comp-comparison-result" class="hidden"></div>
+                </div>
             </div>
         </div>
-
         <div id="app-conceptos" class="app-view">
             <h1>REPRESENTACIÓN DE NÚMEROS DECIMALES</h1>
             <p class="subtitle">Haz clic en cada cuadrado para verlo en grande</p>
@@ -912,7 +1010,6 @@
                     </div>
                 </div>
             </div>
-            
             <div class="modal" id="con-modal-unidad">
                 <div class="close-btn" onclick="con_closeModal('unidad')">✕</div>
                 <div class="modal-content">
@@ -965,7 +1062,6 @@
                 </div>
             </div>
         </div>
-
         <div id="app-representacion" class="app-view">
             <h1>REPRESENTACIÓN DE NÚMEROS DECIMALES</h1>
             <div class="input-section">
@@ -977,10 +1073,8 @@
                 <button onclick="rep_clearRepresentation()" class="clear-btn">Limpiar</button>
                 <div id="rep-errorMessage" class="error"></div>
             </div>
-
             <div class="container" id="rep-representationContainer">
                 </div>
-
             <div class="modal" id="rep-modal-unidad">
                 <div class="close-btn" onclick="rep_closeModal('unidad')">✕</div>
                 <div class="modal-content">
@@ -1030,7 +1124,6 @@
             </div>
         </div>
     </main>
-
     <script>
         // === SCRIPT DE NAVEGACIÓN GLOBAL ===
         function showApp(appId) {
@@ -1042,14 +1135,245 @@
             document.querySelectorAll('.nav-btn').forEach(btn => {
                 btn.classList.remove('active');
             });
-
             // Mostrar la vista seleccionada
             document.getElementById(appId).classList.add('active');
             // Marcar el botón como activo
             document.getElementById('nav-btn-' + appId.split('-')[1]).classList.add('active');
         }
-
-
+        
+        // === SCRIPT PARA LA HERRAMIENTA DE COMPARACIÓN ===
+        document.getElementById('recta-toggle-comparison').addEventListener('click', function() {
+            const container = document.getElementById('recta-comparison-container');
+            container.classList.toggle('hidden');
+            
+            // Si se muestra el comparador, inicializar la recta estática
+            if (!container.classList.contains('hidden')) {
+                drawCompStaticNumberLineTicks();
+            }
+        });
+        
+        document.getElementById('comp-compareBtn').addEventListener('click', runComparison);
+        
+        // Permitir presionar "Enter" en los inputs
+        document.getElementById('comp-num1').addEventListener('keypress', e => e.key === 'Enter' && runComparison());
+        document.getElementById('comp-num2').addEventListener('keypress', e => e.key === 'Enter' && runComparison());
+        document.getElementById('comp-num3').addEventListener('keypress', e => e.key === 'Enter' && runComparison());
+        
+        /**
+         * Función principal que se ejecuta al hacer clic en "Comparar"
+         */
+        function runComparison() {
+            const errorDiv = document.getElementById('comp-errorMessage');
+            const comparisonSection = document.getElementById('comp-comparison-section');
+            const resultDiv = document.getElementById('comp-comparison-result');
+            const dynamicLineDiv = document.getElementById('comp-mainNumberLine');
+            const staticLineDiv = document.getElementById('comp-staticNumberLine');
+            
+            errorDiv.textContent = '';
+            dynamicLineDiv.innerHTML = '<div class="line-comparison"></div>'; // Limpiar recta dinámica
+            comparisonSection.classList.add('hidden');
+            resultDiv.classList.add('hidden');
+            
+            // Limpiar marcadores ANTERIORES de la recta estática
+            staticLineDiv.querySelectorAll('.marker-comparison, .marker-label-comparison').forEach(el => el.remove());
+            
+            // 1. Obtener y parsear los números
+            const inputs = [
+                document.getElementById('comp-num1').value,
+                document.getElementById('comp-num2').value,
+                document.getElementById('comp-num3').value
+            ];
+            
+            const numbers = [];
+            for (let i = 0; i < inputs.length; i++) {
+                if (inputs[i].trim() !== '') {
+                    const num = parseDecimal(inputs[i]);
+                    if (isNaN(num)) {
+                        errorDiv.textContent = `⚠ Valor inválido en 'Número ${i+1}'. Usa formatos como 1.5 o -0,2.`;
+                        return;
+                    }
+                    numbers.push({ value: num, id: i + 1 });
+                }
+            }
+            
+            if (numbers.length === 0) {
+                errorDiv.textContent = '⚠️ Introduce al menos un número para comparar.';
+                return;
+            }
+            
+            // 2. Dibujar en la recta estática (SOLO los números entre 1 y 10)
+            const staticNumbers = numbers.filter(n => n.value >= 1 && n.value <= 10);
+            drawAllMarkers(staticLineDiv, staticNumbers, 1, 10);
+            
+            // 3. Ordenar los números para la recta dinámica y el resultado
+            numbers.sort((a, b) => a.value - b.value);
+            
+            // 4. Determinar el rango de la recta dinámica
+            const minNum = numbers[0].value;
+            const maxNum = numbers[numbers.length - 1].value;
+            
+            let lineMin = Math.floor(minNum);
+            let lineMax = Math.ceil(maxNum);
+            
+            if (lineMin === lineMax) {
+                lineMin -= 1;
+                lineMax += 1;
+            }
+            
+            if (minNum - lineMin < 0.2) lineMin -= 1;
+            if (lineMax - maxNum < 0.2) lineMax += 1;
+            
+            // 5. Dibujar la recta numérica dinámica (marcas de unidades)
+            drawNumberLineTicks(dynamicLineDiv, lineMin, lineMax);
+            
+            // 6. Dibujar los marcadores para cada número en la recta dinámica
+            drawAllMarkers(dynamicLineDiv, numbers, lineMin, lineMax);
+            
+            // 7. Mostrar el resultado ordenado
+            const resultString = numbers.map(n => formatToLocale(n.value)).join(' < ');
+            resultDiv.innerHTML = `Orden: ${resultString}`;
+            
+            // Mostrar las secciones
+            comparisonSection.classList.remove('hidden');
+            resultDiv.classList.remove('hidden');
+        }
+        
+        /**
+         * Dibuja todos los marcadores en una recta con anti-solapamiento.
+         * @param {HTMLElement} container - El div de la recta
+         * @param {Array} numbers - Array de objetos {value, id}
+         * @param {number} min - Valor mínimo de la recta
+         * @param {number} max - Valor máximo de la recta
+         */
+        function drawAllMarkers(container, numbers, min, max) {
+            // Ordenar por valor para asignar niveles de izq a dcha
+            const sortedNumbers = [...numbers].sort((a, b) => a.value - b.value);
+            
+            // Niveles verticales (en px) para evitar solapamiento
+            const levels = [-30, -55, -80]; 
+            const range = max - min;
+            
+            if (range === 0) return; // Evitar división por cero
+            
+            sortedNumbers.forEach((numData, index) => {
+                const { value, id } = numData;
+                
+                // Nivel vertical escalonado
+                const levelTop = levels[index % levels.length];
+                
+                const percent = ((value - min) / range) * 100;
+                const position = 5 + (percent * 0.90); // Posición ajustada al margen 5%-95%
+                
+                // No dibujar si está fuera de la línea visible
+                if (position < 5 || position > 95) {
+                    return;
+                }
+                
+                // Marcador (línea vertical)
+                const marker = document.createElement('div');
+                marker.className = `marker-comparison marker-${id}`;
+                marker.style.left = `${position}%`;
+                
+                // Etiqueta (globo con el número)
+                const label = document.createElement('div');
+                label.className = `marker-label-comparison label-${id}`;
+                label.textContent = formatToLocale(value);
+                label.style.left = `${position}%`;
+                label.style.top = `${levelTop}px`; // Asignar altura dinámica
+                
+                container.appendChild(marker);
+                container.appendChild(label);
+            });
+        }
+        
+        /**
+         * Dibuja la línea y las marcas de las unidades (Ticks)
+         * @param {HTMLElement} container - El div de la recta
+         * @param {number} min - Valor mínimo de la recta
+         * @param {number} max - Valor máximo de la recta
+         */
+        function drawNumberLineTicks(container, min, max) {
+            const range = max - min;
+            const numTicks = Math.round(range);
+            
+            let step = 1;
+            if (numTicks > 20) {
+                step = Math.ceil(numTicks / 20);
+            }
+            
+            for (let i = min; i <= max; i += step) {
+                const value = Math.round(i);
+                if (value < min || value > max) continue;
+                
+                const percent = ((value - min) / range) * 100;
+                const position = 5 + (percent * 0.90); 
+                
+                if (position >= 5 && position <= 95) {
+                    const tick = document.createElement('div');
+                    tick.className = 'tick-comparison';
+                    tick.style.left = `${position}%`;
+                    
+                    const label = document.createElement('div');
+                    label.className = 'tick-label-comparison';
+                    label.textContent = formatToLocale(value);
+                    label.style.left = `${position}%`;
+                    
+                    container.appendChild(tick);
+                    container.appendChild(label);
+                }
+            }
+        }
+        
+        /**
+         * Dibuja las marcas de la recta numérica estática (solo los ticks del 1 al 10)
+         */
+        function drawCompStaticNumberLineTicks() {
+            const container = document.getElementById('comp-staticNumberLine');
+            if (!container) return;
+            
+            container.innerHTML = '<div class="line-comparison"></div>';
+            
+            const min = 1;
+            const max = 10;
+            const range = max - min; // Rango es 9
+            
+            for (let i = min; i <= max; i++) {
+                const value = i;
+                const percent = ((value - min) / range) * 100;
+                const position = 5 + (percent * 0.90); 
+                
+                const tick = document.createElement('div');
+                tick.className = 'tick-comparison';
+                tick.style.left = `${position}%`;
+                
+                const label = document.createElement('div');
+                label.className = 'tick-label-comparison';
+                label.textContent = value;
+                label.style.left = `${position}%`;
+                
+                container.appendChild(tick);
+                container.appendChild(label);
+            }
+        }
+        
+        /**
+         * Convierte una entrada de texto (con . o ,) en un número
+         */
+        function parseDecimal(input) {
+            let clean = input.trim().replace(/,/g, '.');
+            return parseFloat(clean);
+        }
+        
+        /**
+         * Formatea un número para mostrarlo (con coma decimal)
+         */
+        function formatToLocale(num) {
+            return num.toLocaleString('es-ES', { 
+                minimumFractionDigits: 0, 
+                maximumFractionDigits: 4 
+            });
+        }
+        
         // === SCRIPT PARA APP 1: RECTA NUMÉRICA ===
         // Se usa una IIFE (Función autoejecutable) para aislar el scope
         // y evitar colisiones de nombres de funciones como 'parseDecimal'.
@@ -1059,54 +1383,44 @@
             document.getElementById('recta-decimalInput').addEventListener('keypress', function(e) {
                 if (e.key === 'Enter') locateDecimal();
             });
-
             function parseDecimal(input) {
                 let clean = input.trim().replace(/,/g, '.');
                 return parseFloat(clean);
             }
-
             function formatToLocale(num) {
                 return num.toLocaleString('es-ES', { minimumFractionDigits: 0, maximumFractionDigits: 3 });
             }
-
             function locateDecimal() {
                 const input = document.getElementById('recta-decimalInput').value;
                 const errorDiv = document.getElementById('recta-errorMessage');
                 errorDiv.textContent = '';
-
                 if (!input) {
                     errorDiv.textContent = '⚠️ Introduce un número decimal.';
                     return;
                 }
-
                 const num = parseDecimal(input);
                 if (isNaN(num)) {
                     errorDiv.textContent = '❌ Formato inválido. Usa números como 1.376 o 2,5.';
                     return;
                 }
-
                 if (Math.abs(num) > 1000) {
                     errorDiv.textContent = '📏 Usa un número entre -1000 y 1000.';
                     return;
                 }
-
                 document.getElementById('recta-section2').classList.remove('hidden');
                 document.getElementById('recta-section3').classList.remove('hidden');
                 document.getElementById('recta-section4').classList.remove('hidden');
-                
                 drawUnitsLine(num);
                 drawTenthsLine(num);
                 drawHundredthsLine(num);
                 drawThousandthsLine(num);
             }
-
             // === UNIDADES ===
             function drawUnitsLine(num) {
                 const container = document.getElementById('recta-lineUnits');
                 container.innerHTML = '<div class="line"></div>';
                 const start = Math.floor(num / 10) * 10;
                 const end = start + 10;
-
                 for (let i = 0; i <= 10; i++) {
                     const value = start + i;
                     const percent = 5 + (i / 10) * 90;
@@ -1130,7 +1444,6 @@
                 marker.appendChild(label);
                 container.appendChild(marker);
             }
-
             // === DÉCIMAS ===
             function drawTenthsLine(num) {
                 const container = document.getElementById('recta-lineTenths');
@@ -1159,7 +1472,6 @@
                 marker.appendChild(label);
                 container.appendChild(marker);
             }
-
             // === CENTÉSIMAS ===
             function drawHundredthsLine(num) {
                 const container = document.getElementById('recta-lineHundredths');
@@ -1188,7 +1500,6 @@
                 marker.appendChild(label);
                 container.appendChild(marker);
             }
-
             // === MILÉSIMAS ===
             function drawThousandthsLine(num) {
                 const container = document.getElementById('recta-lineThousandths');
@@ -1218,8 +1529,7 @@
                 container.appendChild(marker);
             }
         })();
-
-
+        
         // === SCRIPT PARA APP 2: CONCEPTOS (CUADROS) ===
         // Funciones prefijadas con 'con_' para evitar colisiones
         // Estas deben ser globales porque son llamadas por 'onclick'
@@ -1231,28 +1541,23 @@
                 grid.appendChild(cell);
             }
         }
-        
         function con_openModal(type) {
             const modal = document.getElementById('con-modal-' + type);
             modal.classList.add('active');
             // document.body.style.overflow = 'hidden'; // Se maneja a nivel global
         }
-        
         function con_closeModal(type) {
             const modal = document.getElementById('con-modal-' + type);
             modal.classList.remove('active');
             // document.body.style.overflow = 'auto'; // Se maneja a nivel global
         }
-
         // Generar cuadrículas de vista previa para App 2 (IDs prefijados)
         con_generateGrid('con-preview-decimas', 10);
         con_generateGrid('con-preview-centesimas', 100);
         con_generateGrid('con-preview-milesimas', 1024);
-        
         con_generateGrid('con-modal-grid-decimas', 10);
         con_generateGrid('con-modal-grid-centesimas', 100);
         con_generateGrid('con-modal-grid-milesimas', 1024);
-        
         // Listeners para cerrar modales de App 2 (aislados)
         (function() {
             document.querySelectorAll('#app-conceptos .modal').forEach(modal => {
@@ -1262,7 +1567,6 @@
                     }
                 });
             });
-            
             document.addEventListener('keydown', function(e) {
                 if (e.key === 'Escape') {
                     document.querySelectorAll('#app-conceptos .modal').forEach(modal => {
@@ -1271,23 +1575,19 @@
                 }
             });
         })();
-
-
+        
         // === SCRIPT PARA APP 3: REPRESENTACIÓN DINÁMICA ===
         // Funciones prefijadas con 'rep_' para evitar colisiones
         // Estas deben ser globales porque son llamadas por 'onclick'
-        
         function rep_clearContainer(id) {
             document.getElementById(id).innerHTML = '';
         }
-
         function rep_createUnitCard(isFilled, index) {
             const div = document.createElement('div');
             div.className = 'square ' + (isFilled ? 'filled' : '');
             div.title = isFilled ? 'Unidad completa' : 'Unidad vacía';
             return div;
         }
-
         function rep_createGrid(containerId, totalCells, filledCells, cellClass = 'grid-cell') {
             const container = document.getElementById(containerId);
             rep_clearContainer(containerId); // Usa la función prefijada
@@ -1300,17 +1600,14 @@
                 container.appendChild(cell);
             }
         }
-        
         function rep_clearRepresentation() {
             rep_renderDefaultState(); // Usa la función prefijada
             document.getElementById('rep-decimalInput').value = '';
             document.getElementById('rep-errorMessage').textContent = '';
         }
-
         function rep_renderDefaultState() {
             const container = document.getElementById('rep-representationContainer');
             container.innerHTML = ''; 
-
             const cardUnit = document.createElement('div');
             cardUnit.className = 'card';
             cardUnit.innerHTML = `
@@ -1324,7 +1621,6 @@
             `;
             cardUnit.onclick = () => rep_openUnitsModal(0); // Usa la función prefijada
             container.appendChild(cardUnit);
-
             const cardDecimas = document.createElement('div');
             cardDecimas.className = 'card';
             cardDecimas.innerHTML = `
@@ -1339,7 +1635,6 @@
             cardDecimas.onclick = () => rep_openModal('decimas', 0, 10); // Usa la función prefijada
             container.appendChild(cardDecimas);
             rep_createGrid('rep-preview-decimas', 10, 0); // Usa la función prefijada
-
             const cardCentesimas = document.createElement('div');
             cardCentesimas.className = 'card';
             cardCentesimas.innerHTML = `
@@ -1354,7 +1649,6 @@
             cardCentesimas.onclick = () => rep_openModal('centesimas', 0, 100); // Usa la función prefijada
             container.appendChild(cardCentesimas);
             rep_createGrid('rep-preview-centesimas', 100, 0); // Usa la función prefijada
-
             const cardMilesimas = document.createElement('div');
             cardMilesimas.className = 'card';
             cardMilesimas.innerHTML = `
@@ -1370,33 +1664,27 @@
             container.appendChild(cardMilesimas);
             rep_createGrid('rep-preview-milesimas', 1024, 0); // Usa la función prefijada
         }
-
         function rep_renderDecimal() {
             const input = document.getElementById('rep-decimalInput').value;
             const errorDiv = document.getElementById('rep-errorMessage');
             errorDiv.textContent = '';
-
             if (input === '') {
                 errorDiv.textContent = 'Por favor, introduce un número.';
                 return;
             }
-
             let num = parseFloat(input);
             if (isNaN(num) || num < 0) {
                 errorDiv.textContent = 'Introduce un número decimal válido ≥ 0.';
                 return;
             }
-
             num = Math.round(num * 1000) / 1000;
             const whole = Math.floor(num);
             const totalMilesimas = Math.round((num - whole) * 1000);
             const decimas = Math.floor(totalMilesimas / 100);
             const centesimas = Math.floor((totalMilesimas % 100) / 10);
             const milesimas = totalMilesimas % 10;
-            
             const container = document.getElementById('rep-representationContainer');
             container.innerHTML = '';
-
             if (whole > 0) {
                 for (let i = 0; i < whole; i++) {
                     const card = document.createElement('div');
@@ -1427,7 +1715,6 @@
                 card.onclick = () => rep_openUnitsModal(0); // Usa la función prefijada
                 container.appendChild(card);
             }
-
             if (decimas > 0 || centesimas > 0 || milesimas > 0) {
                 const card = document.createElement('div');
                 card.className = 'card';
@@ -1444,7 +1731,6 @@
                 container.appendChild(card);
                 rep_createGrid('rep-preview-decimas', 10, decimas); // Usa la función prefijada
             }
-
             if (centesimas > 0 || milesimas > 0) {
                 const card = document.createElement('div');
                 card.className = 'card';
@@ -1461,7 +1747,6 @@
                 container.appendChild(card);
                 rep_createGrid('rep-preview-centesimas', 100, centesimas); // Usa la función prefijada
             }
-
             if (milesimas > 0) {
                 const card = document.createElement('div');
                 card.className = 'card';
@@ -1479,18 +1764,15 @@
                 const approxCells = Math.round((milesimas / 1000) * 1024);
                 rep_createGrid('rep-preview-milesimas', 1024, approxCells); // Usa la función prefijada
             }
-
             if (whole === 0 && decimas === 0 && centesimas === 0 && milesimas === 0) {
                 container.innerHTML = '<p style="color:white; font-size:20px;">El número 0 no tiene partes para representar.</p>';
             }
         }
-
         function rep_openUnitsModal(count) {
             const modal = document.getElementById('rep-modal-unidad');
             const squareDiv = document.getElementById('rep-modal-square-unidad');
             const infoDiv = document.getElementById('rep-modal-info-unidad');
             squareDiv.innerHTML = ''; 
-
             if (count === 0) {
                 squareDiv.innerHTML = '<div class="square empty-unit" style="width: 100%; height: 100%; background: #fff;"></div>';
                 infoDiv.innerHTML = `Se muestran <span class="highlight">0 unidades</span>.`;
@@ -1512,7 +1794,6 @@
             }
             modal.classList.add('active');
         }
-
         function rep_openModal(type, filled, total) {
             let modalId, gridId, countId, title;
             if (type === 'decimas') {
@@ -1537,12 +1818,10 @@
             }
             document.getElementById(modalId).classList.add('active');
         }
-
         function rep_closeModal(type) {
             const modal = document.getElementById('rep-modal-' + type);
             modal.classList.remove('active');
         }
-
         // Listeners para cerrar modales de App 3 (aislados)
         (function() {
             document.querySelectorAll('#app-representacion .modal').forEach(modal => {
@@ -1552,7 +1831,6 @@
                     }
                 });
             });
-
             document.addEventListener('keydown', function(e) {
                 if (e.key === 'Escape') {
                     document.querySelectorAll('#app-representacion .modal').forEach(modal => {
@@ -1561,10 +1839,8 @@
                 }
             });
         })();
-
         // Inicializar el estado por defecto de la App 3
         rep_renderDefaultState();
-
     </script>
 </body>
 </html>
